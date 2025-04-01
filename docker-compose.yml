@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: aio_docker_bot
+    container_name: translate_docker_bot
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
     volumes:

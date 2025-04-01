@@ -32,4 +32,5 @@ async def lang_translate(callback_query: types.CallbackQuery, state: FSMContext)
 
     if text != "No data found":
         translated = await translate_text(text, callback_query.data)
+        await callback_query.message.delete()
         await callback_query.message.answer(translated)
