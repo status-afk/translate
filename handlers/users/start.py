@@ -1,3 +1,4 @@
+import requests
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import CommandStart
 from loader import dp
@@ -5,7 +6,20 @@ from googletrans import Translator
 from keyboards.inline import Lang_keys
 from aiogram.dispatcher import FSMContext
 
+@dp.message_handler(commands="valyuta")
+async def currency_function(message:types.Message):
+    url="https://cbu.uz/uz/arkhiv-kursov-valyut/json/"
+    request=requests.get(url)
+    response=request.json()
+    date=response[0]['Date']
+    natija=f"Sana : {date}\n"
+    flag=""
+    for currency in response:
+        if currency['Ccy'] in ["USD","EUR","RUB","GBP","JPY"]:
 
+            natija += f"1 {currency['CcyNm_UZ']}~{currency['Rate']}so'm\n"
+
+    await message.answer(natija)
 @dp.message_handler(CommandStart())
 async def bot_start(message: types.Message):
     await message.answer(f"Salom, {message.from_user.full_name}!\nTarjimon botiga hush kelibsiz")
@@ -34,3 +48,5 @@ async def lang_translate(callback_query: types.CallbackQuery, state: FSMContext)
         translated = await translate_text(text, callback_query.data)
         await callback_query.message.delete()
         await callback_query.message.answer(translated)
+
+
